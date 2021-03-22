@@ -1,6 +1,8 @@
+from pprint import pprint
 import requests
+import os
 
-SHEETY_PRICES_ENDPOINT = "https://v2-api.shetty.co/phill/myWebsite/emails/3"
+SHEETY_PRICES_ENDPOINT = os.environ["SHEETY_PRICES_ENDPOINT"]
 
 
 class DataManager:
@@ -11,7 +13,6 @@ class DataManager:
     def get_destination_data(self):
         response = requests.get(url=SHEETY_PRICES_ENDPOINT)
         data = response.json()
-
         self.destination_data = data["prices"]
         return self.destination_data
 
