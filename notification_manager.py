@@ -1,10 +1,14 @@
 from twilio.rest import Client
 import os
+import smtplib
 
 TWILIO_SID = os.environ['TWILIO_SID']
 TWILIO_AUTH_TOKEN = os.environ['TWILIO_AUTH_TOKEN']
 TWILIO_VIRTUAL_NUMBER = os.environ['TWILIO_VIRTUAL_NUMBER']
 TWILIO_VERIFIED_NUMBER = os.environ['TWILIO_VERIFIED_NUMBER']
+MAIL_PROVIDER_SMTP_ADDRESS = os.environ['MAIL_PROVIDER_SMTP_ADDRESS']
+MY_EMAIL = os.environ['MY_EMAIL']
+MY_PASSWORD = os.environ['MY_PASSWORD']
 
 class NotificationManager:
 
@@ -19,4 +23,16 @@ class NotificationManager:
         )
 
         print(message.sid)
+
+    def send_emails(self, emails, message, google_flight_link):
+        with smtplib.SMTP(MAIL_PROVIDER_SMTP_ADDRESS) as connection:
+            connection.starttls()
+            connection.login(MY_EMAIL, MY_PASSWORD)
+            for email in emails:
+                connection.sendmail(
+                    from_addr=MY_EMAIL,
+                    to_addrs=email,
+                    msg=f"Subject: New Low Price"
+                        f"Flight:/n/n{message}/n{google_flight_link}".encode('utf-8')
+                )
 
